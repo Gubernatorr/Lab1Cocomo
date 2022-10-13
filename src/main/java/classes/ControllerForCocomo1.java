@@ -87,23 +87,24 @@ public class ControllerForCocomo1 {
         int kloc = Integer.parseInt(NumForCalcul.getText());
         switch (choiceBox.getValue()){
             case "Органічний":
-                double PM1 = calculPM(orgA, kloc, orgB); txtPM.setText(String.valueOf(PM1));
-                double TM1 = calculTM(PM1, orgC, orgD); txtTM.setText(String.valueOf(TM1));
-                double SS1 = PM1 / TM1; txtSS.setText(String.valueOf(SS1));
-                double P1 = kloc / PM1; txtP.setText(String.valueOf(P1));
+                double PM1 = calculPM(orgA, kloc, orgB); txtPM.setText(String.format("%.2f", PM1));
+                double TM1 = calculTM(PM1, orgC, orgD); txtTM.setText(String.format("%.2f", TM1));
+                double SS1 = PM1 / TM1; txtSS.setText(String.format("%.2f", SS1));
+                double P1 = kloc / PM1; txtP.setText(String.format("%.2f", P1));
                 break;
             case "Напіврозділений" :
-                double PM2 = calculPM(semA, kloc, semB); txtPM.setText(String.valueOf(PM2));
-                double TM2 = calculTM(PM2, semC, semD); txtTM.setText(String.valueOf(TM2));
-                double SS2 = PM2 / TM2; txtSS.setText(String.valueOf(SS2));
-                double P2 = kloc / PM2; txtP.setText(String.valueOf(P2));
-            break;
+                double PM2 = calculPM(semA, kloc, semB); txtPM.setText(String.format("%.2f", PM2));
+                double TM2 = calculTM(PM2, semC, semD); txtTM.setText(String.format("%.2f", TM2));
+                double SS2 = PM2 / TM2; txtSS.setText(String.format("%.2f", SS2));
+                double P2 = kloc / PM2; txtP.setText(String.format("%.2f", P2));
+                break;
             case "Вбудований" :
-                double PM3 = calculPM(embA, kloc, embB); txtPM.setText(String.valueOf(PM3));
-                double TM3 = calculTM(PM3, embC, embD); txtTM.setText(String.valueOf(TM3));
-                double SS3 = PM3 / TM3; txtSS.setText(String.valueOf(SS3));
-                double P3 = kloc / PM3; txtP.setText(String.valueOf(P3));
-            break;
+                double PM3 = calculPM(embA, kloc, embB); txtPM.setText(String.format("%.2f", PM3));
+                double TM3 = calculTM(PM3, embC, embD); txtTM.setText(String.format("%.2f", TM3));
+                double SS3 = PM3 / TM3; txtSS.setText(String.format("%.2f", SS3));
+                double P3 = kloc / PM3; txtP.setText(String.format("%.2f", P3));
+                break;
+
 
             default: System.out.println("nothing");
         }

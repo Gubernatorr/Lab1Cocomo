@@ -1,5 +1,6 @@
 package classes;
 
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -55,8 +56,17 @@ public class ControllerForCocomo2 {
     private ChoiceBox<String> TIMEchoiceBox;
     @FXML
     private ChoiceBox<String> TOOLchoiceBox;
+
     @FXML
-    private ChoiceBox<String> choiceBox;
+    private ChoiceBox<String> PRECchoiceBox;
+    @FXML
+    private ChoiceBox<String> FLEXchoiceBox;
+    @FXML
+    private ChoiceBox<String> RESLchoiceBox;
+    @FXML
+    private ChoiceBox<String> TEAMchoiceBox;
+    @FXML
+    private ChoiceBox<String> PMATchoiceBox;
     @FXML
     private TextField NumForCalcul;
 
@@ -74,7 +84,10 @@ public class ControllerForCocomo2 {
 
     @FXML
     private Text txtTM;
-
+    @FXML
+    private Text txtPM1;
+    @FXML
+    private ChoiceBox<String> choiceBox;
     @FXML
     void calculateButtonPressed(ActionEvent event) {
         doCalcul(Integer.parseInt(NumForCalcul.getText()));
@@ -103,28 +116,94 @@ public class ControllerForCocomo2 {
     public void getStringsForSITEChoiseBox(ActionEvent event){String myChoiseBoxStrings = SITEchoiceBox.getValue();}
     public void getStringsForSCEDChoiseBox(ActionEvent event){String myChoiseBoxStrings = SCEDchoiceBox.getValue();}
 
+    double[] ACAPvalues = {1.42, 1.29, 1.00, 0.85, 0.71, 1.00};
+    double[] AEXPvalues = {1.22, 1.10, 1.00, 0.88, 0.81, 1.00};
+    double[] PCAPvalues = {1.34, 1.15, 1.00, 0.88, 0.76, 1.00};
+    double[] PCONvalues = {1.29, 1.12, 1.00, 0.90, 0.81, 1.00};
+    double[] PEXPPvalues = {1.19, 1.09, 1.00, 0.91, 0.85, 1.00};
+    double[] LTEXvalues = {1.20, 1.09, 1.00, 0.91, 0.84, 1.00};
+
+    double[] RELYvalues = {0.84, 0.92, 1.00, 1.10, 1.26, 1.00};
+    double[] DATAvalues = {1.00, 0.23, 1.00, 1.14, 1.28, 1.00};
+    double[] CPLXvalues = {0.73, 0.87, 1.00, 1.17, 1.34, 1.74};
+    double[] RUSEvalues = {1.00, 0.95, 1.00, 1.07, 1.15, 1.24};
+    double[] DOCUvalues = {0.81, 1.91, 1.00, 1.11, 1.23, 1.00};
+
+    double[] TIMEvalues = {1.00, 1.00, 1.00, 1.11, 1.29, 1.63};
+    double[] STORvalues = {1.00, 1.00, 1.00, 1.05, 1.17, 1.46};
+    double[] PVOLvalues = {1.00, 0.87, 1.00, 1.15, 1.30, 1.00};
+
+    double[] TOOLvalues = {1.17, 1.09, 1.00, 0.90, 0.78, 1.00};
+    double[] SITEvalues = {1.22, 1.09, 1.00, 0.93, 0.86, 0.80};
+    double[] SCEDvalues = {1.43, 1.14, 1.00, 1.00, 1.00, 1.00};
+
+    double[] PRECvalues = {6.20, 4.96, 3.72, 2.48, 1.24, 0.00};
+    double[] FLEXvalues = {5.07, 4.05, 3.04, 2.03, 1.01, 0.00};
+    double[] RESLvalues = {7.07, 5.65, 4.24, 2.83, 1.41, 0.00};
+    double[] TEAMvalues = {5.48, 4.38, 3.29, 2.19, 1.10, 0.00};
+    double[] PMATvalues = {7.80, 6.24, 4.68, 3.12, 1.56, 0.00};
     double orgA = 2.4, orgB = 1.05, orgC = 2.5, orgD = 0.38;
     double semA = 3.0, semB = 1.12, semC = 2.5, semD = 0.35;
     double embA = 3.6, embB = 1.20, embC = 2.5, embD = 0.31;
 
-    public static double calculPM(double a, int kloc, double b){
-        double PM = a * pow(kloc, b);
-        return PM;
+    public static double calculPM(double a, int kloc, double b){ double PM = a * pow(kloc, b); return PM;}
+    public static double calculTM(double PM, double c, double d){ double TM = c * pow(PM, d); return TM;}
+    public static double calculSS(double PM, double TM){double SS = PM / TM; return SS;}
+    public static double calculP(int kloc, double PM){ double P = kloc / PM; return P;}
+
+    public static double getNumOfLevels(ChoiceBox<String> choiceBox, double[] values){
+        double num = 0.00;
+        switch (choiceBox.getValue()){
+            case "Very Low": num = values[0]; break;
+            case "Low" :num = values[1]; break;
+            case "Nominal" :num = values[2]; break;
+            case "High" :num = values[3]; break;
+            case "Very High" :num = values[4]; break;
+            case "Extra High" :num = values[5]; break;
+            default:
+                System.out.println("No choice");
+        }
+        return num;
     }
 
-    public static double calculTM(double PM, double c, double d){
-        double TM = c * pow(PM, d);
-        return TM;
+    public double calculEAF(){
+        double EAF = 0.00;
+
+        double num1 = getNumOfLevels(ACAPchoiceBox, ACAPvalues);
+        double num2 = getNumOfLevels(AEXPchoiceBox, AEXPvalues);
+        double num3 = getNumOfLevels(PCAPchoiceBox, PCAPvalues);
+        double num4 = getNumOfLevels(PCONchoiceBox, PCONvalues);
+        double num5 = getNumOfLevels(PEXPchoiceBox, PEXPPvalues);
+        double num6 = getNumOfLevels(LTEXchoiceBox, LTEXvalues);
+
+        double num7 = getNumOfLevels(RELYchoiceBox, RELYvalues);
+        double num8 = getNumOfLevels(DATAchoiceBox, DATAvalues);
+        double num9 = getNumOfLevels(CPLXchoiceBox, CPLXvalues);
+        double num10 = getNumOfLevels(RUSEchoiceBox, RUSEvalues);
+        double num11 = getNumOfLevels(DOCUchoiceBox, DOCUvalues);
+
+        double num12 = getNumOfLevels(TIMEchoiceBox, TIMEvalues);
+        double num13 = getNumOfLevels(STORchoiceBox, STORvalues);
+        double num14 = getNumOfLevels(PVOLchoiceBox, PVOLvalues);
+
+        double num15 = getNumOfLevels(TOOLchoiceBox, TOOLvalues);
+        double num16 = getNumOfLevels(SITEchoiceBox, SITEvalues);
+        double num17 = getNumOfLevels(SCEDchoiceBox, SITEvalues);
+
+        EAF = num1 * num2 * num3 * num4 * num5 * num6 * num7 * num8 * num9 * num10 * num11 * num12 * num13 * num14 * num15 * num16 * num17;
+
+        return EAF;
     }
 
-    public static double calculSS(double PM, double TM){
-        double SS = PM / TM;
-        return SS;
-    }
+    public double calculE(){
+        double num1 = getNumOfLevels(PRECchoiceBox, PRECvalues);
+        double num2 = getNumOfLevels(FLEXchoiceBox, FLEXvalues);
+        double num3 = getNumOfLevels(RESLchoiceBox, RESLvalues);
+        double num4 = getNumOfLevels(TEAMchoiceBox, TEAMvalues);
+        double num5 = getNumOfLevels(PMATchoiceBox, PMATvalues);
 
-    public static double calculP(int kloc, double PM){
-        double P = kloc / PM;
-        return P;
+        double E = 0.91 + 0.01 * (num1 + num2 + num3 + num4 + num5);
+        return E;
     }
 
     // PM = EAF * A* (SIZE)^E
@@ -149,9 +228,13 @@ public class ControllerForCocomo2 {
                 double SS3 = PM3 / TM3; txtSS.setText(String.format("%.2f", SS3));
                 double P3 = kloc / PM3; txtP.setText(String.format("%.2f", P3));
                 break;
-
             default: System.out.println("nothing");
         }
+
+        double EAF = calculEAF();
+        double E = calculE();
+        double PM1 = EAF * 2.94 * pow(kloc, E);
+        txtPM1.setText(String.format("%.2f", PM1));
     }
 
     @FXML
@@ -179,6 +262,11 @@ public class ControllerForCocomo2 {
         TOOLchoiceBox.getItems().addAll(choiseBoxStrings2); TOOLchoiceBox.setValue("Nominal");
         SITEchoiceBox.getItems().addAll(choiseBoxStrings2); SITEchoiceBox.setValue("Nominal");
         SCEDchoiceBox.getItems().addAll(choiseBoxStrings2); SCEDchoiceBox.setValue("Nominal");
+        PRECchoiceBox.getItems().addAll(choiseBoxStrings2); PRECchoiceBox.setValue("Nominal");
+        FLEXchoiceBox.getItems().addAll(choiseBoxStrings2); FLEXchoiceBox.setValue("Nominal");
+        RESLchoiceBox.getItems().addAll(choiseBoxStrings2); RESLchoiceBox.setValue("Nominal");
+        TEAMchoiceBox.getItems().addAll(choiseBoxStrings2); TEAMchoiceBox.setValue("Nominal");
+        PMATchoiceBox.getItems().addAll(choiseBoxStrings2); PMATchoiceBox.setValue("Nominal");
 
         ACAPchoiceBox.setOnAction(this::getStringsForACAPChoiseBox);
         AEXPchoiceBox.setOnAction(this::getStringsForAEXPChoiseBox);
@@ -197,6 +285,11 @@ public class ControllerForCocomo2 {
         TOOLchoiceBox.setOnAction(this::getStringsForTOOLChoiseBox);
         SITEchoiceBox.setOnAction(this::getStringsForSITEChoiseBox);
         SCEDchoiceBox.setOnAction(this::getStringsForSCEDChoiseBox);
+        PRECchoiceBox.setOnAction(this::getStringsForSTORChoiseBox);
+        FLEXchoiceBox.setOnAction(this::getStringsForPVOLChoiseBox);
+        RESLchoiceBox.setOnAction(this::getStringsForTOOLChoiseBox);
+        TEAMchoiceBox.setOnAction(this::getStringsForSITEChoiseBox);
+        PMATchoiceBox.setOnAction(this::getStringsForSCEDChoiseBox);
 
 
 
